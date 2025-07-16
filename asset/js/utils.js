@@ -18,16 +18,6 @@ export function appendSystemMessage(msg) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-copyPeerIdBtn.addEventListener("click", () => {
-  const peerId = peer.id;
-  navigator.clipboard
-    .writeText(peerId)
-    .then(() => {
-      showToast("Peer ID copied! <i class='fas fa-check text-green-400 ml-1'></i>");
-    })
-    .catch((err) => console.error("Failed to copy: ", err));
-});
-
 document.getElementById("copy-invite-btn").onclick = () => {
   const id = peer.id;
   if (id) {
