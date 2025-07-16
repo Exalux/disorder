@@ -1,17 +1,21 @@
 @media (max-width: 767px) {
-  aside {
+  aside:not(#mobile-sidebar aside) {
     display: none !important;
   }
+  
   #mobile-sidebar {
-    display: none;
+    display: block;
   }
+  
   .flex-1 {
     width: 100%;
   }
+  
   #chat-box {
     padding: 12px;
     margin-bottom: 80px;
-    height: calc(100vh - 128px);
+    height: calc(100vh - 112px);
+    padding-top: 60px;
   }
 
   header.md\:hidden {
@@ -23,6 +27,11 @@
     height: 48px;
     padding: 0 16px;
     background: #313338;
+  }
+
+  #voice-top-panel {
+    top: 48px !important;
+    left: 0 !important;
   }
 
   footer {
@@ -39,13 +48,7 @@
     border-top: 1px solid #232428;
   }
   
-  footer button:not([for="plus-file-input"]), 
-  #emoji-btn, 
-  #emoji-picker,
-  [for="file-input"],
-  .fa-gift,
-  .fa-image,
-  .fa-gamepad {
+  footer .hidden {
     display: none !important;
   }
 
@@ -84,6 +87,11 @@
 
   #send-btn:hover {
     color: #ffffff;
+  }
+
+  #media-control-dock {
+    bottom: 80px !important;
+    left: 50% !important;
   }
 
   #profile-panel {
@@ -131,6 +139,16 @@
     display: none;
   }
 
+  #mobile-connect-btn {
+    min-width: 80px;
+  }
+
+  #mobile-peer-input {
+    min-height: 40px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    -webkit-appearance: none;
+  }
+
   .text-2xl {
     font-size: 1.25rem;
   }
@@ -157,9 +175,57 @@
     }
   }
 
+  .message-container {
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+
+  .message-container:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
   button, label, input {
     min-height: 44px; /* Minimum touch target size */
     touch-action: manipulation;
+  }
+
+  /* Improve touch targets */
+  .voice-user {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+
+  /* Better scrolling */
+  #chat-box {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Keyboard adjustments */
+  .keyboard-open #chat-box {
+    height: calc(100vh - 200px);
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+  #chat-box {
+    height: calc(100vh - 100px);
+    padding-top: 50px;
+  }
+
+  header.md\:hidden {
+    height: 40px;
+  }
+
+  footer {
+    height: 50px;
+    padding: 4px 12px;
+  }
+
+  #media-control-dock {
+    bottom: 60px !important;
+    padding: 8px 16px;
   }
 }
 
@@ -180,4 +246,20 @@ meta[name="viewport"] {
 :focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
+}
+
+/* Enhanced Discord-like styling */
+.message-hover {
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-profile-card {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }

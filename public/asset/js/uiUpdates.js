@@ -53,7 +53,10 @@ export function displayMessage(
 
   const header = document.createElement("div");
   header.className = "flex items-center";
-  header.innerHTML = `<span class="font-bold text-blue-400">${sender}</span> <span class="text-xs text-gray-400 ml-2">${new Date().toLocaleTimeString()}</span>`;
+  header.innerHTML = `
+    <span class="font-bold text-blue-400 hover:underline cursor-pointer">${sender}</span> 
+    <span class="text-xs text-gray-400 ml-2">${new Date().toLocaleTimeString()}</span>
+  `;
 
   const body = document.createElement("div");
   body.className = "text-white";
@@ -62,6 +65,8 @@ export function displayMessage(
   const isMentioned = message.match(mentionRegex);
   if (isMentioned) {
     container.classList.add("mentioned");
+    // Play mention sound (if available)
+    playNotificationSound();
   }
 
   if (message) {
@@ -159,10 +164,33 @@ export function displayMessage(
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function playNotificationSound() {
+  try {
+    // Create a simple notification beep
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (error) {
+    console.warn('Audio notification not supported:', error);
+  }
+}
+
 export function appendSystemMessage(msg) {
   const div = document.createElement("div");
-  div.className = "text-center text-gray-400 text-sm";
-  div.textContent = msg;
+  div.className = "text-center text-gray-400 text-sm my-2 px-4 py-1 bg-[#2b2d31] bg-opacity-50 rounded-full mx-auto max-w-fit";
+  div.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${msg}`;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -172,22 +200,31 @@ export function updatePeerSidebar() {
   const activePeers = Object.values(peerDetails).filter((p) => p.active).length;
   peerCount.textContent = `Online - ${activePeers}`;
   Object.keys(peerDetails).forEach((peerId) => {
-    const peer = document.createElement("div");
-    peer.className =
-      "flex items-center gap-2 p-1 hover:bg-[#3c3f45] rounded cursor-pointer";
-    peer.dataset.peerId = peerId;
-    peer.innerHTML = `
-      <img src="${
+    const peerElement = document.createElement("div");
+    peerElement.className =
+      "flex items-center gap-2 p-2 hover:bg-[#3c3f45] rounded cursor-pointer transition-colors";
+    peerElement.dataset.peerId = peerId;
+    
+    const isOnline = peerDetails[peerId].active;
+    const statusColor = isOnline ? 'bg-green-500' : 'bg-gray-500';
+    
+    peerElement.innerHTML = `
+      <div class="relative">
+        <img src="${
         peerDetails[peerId].avatar || "https://via.placeholder.com/20"
-      }" class="w-5 h-5 rounded-full" />
-      <span class="text-white-500 ml-auto">${
+        }" class="w-8 h-8 rounded-full" />
+        <div class="absolute -bottom-1 -right-1 w-3 h-3 ${statusColor} rounded-full border-2 border-[#2b2d31]"></div>
+      </div>
+      <div class="flex-1">
+        <div class="text-white text-sm font-medium">${
         peerDetails[peerId].username || peerId
-      }</span>
-      <span class="text-xs text-gray-400 ml-auto">${
-        peerDetails[peerId].active ? "Online" : "Offline"
-      }</span>
+        }</div>
+        <div class="text-xs text-gray-400">${
+          isOnline ? "Online" : "Offline"
+        }</div>
+      </div>
     `;
-    peerList.appendChild(peer);
+    peerList.appendChild(peerElement);
   });
 }
 
