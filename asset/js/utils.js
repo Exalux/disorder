@@ -17,12 +17,3 @@ export function appendSystemMessage(msg) {
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-document.getElementById("copy-invite-btn").onclick = () => {
-  const id = peer.id;
-  if (id) {
-    const url = `${window.location.origin}?id=${id}`;
-    navigator.clipboard.writeText(url);
-    showToast("Invite link copied <i class='fas fa-link text-blue-400 ml-1'></i>");
-  }
-};
