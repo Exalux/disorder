@@ -93,8 +93,12 @@
 }
 
 @keyframes speakingPulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
 }
 
 /* Typing indicator */
@@ -102,11 +106,17 @@
   animation: typingBounce 1.4s ease-in-out infinite both;
 }
 
-.typing-dots div:nth-child(1) { animation-delay: -0.32s; }
-.typing-dots div:nth-child(2) { animation-delay: -0.16s; }
+.typing-dots div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typing-dots div:nth-child(2) {
+  animation-delay: -0.16s;
+}
 
 @keyframes typingBounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0);
   }
   40% {
@@ -179,8 +189,59 @@ button {
 }
 
 /* Input focus effects */
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   box-shadow: 0 0 0 1px #5865f2;
+}
+
+/* Mobile sidebar animations */
+.sidebar-open {
+  animation: slideInLeft 0.2s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* GIF picker animations */
+.gif-picker {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Emoji picker styling */
+.emoji-picker {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+.emoji-picker::-webkit-scrollbar {
+  width: 6px;
+}
+
+.emoji-picker::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 3px;
+}
+
+/* GIF image styling */
+.gif-image {
+  max-height: 300px;
+  object-fit: contain;
 }
 
 /* Mobile specific styles */
@@ -192,15 +253,15 @@ input:focus, textarea:focus {
   aside:not(#mobile-sidebar aside) {
     display: none !important;
   }
-  
+
   #mobile-sidebar {
     display: block;
   }
-  
+
   .flex-1 {
     width: 100%;
   }
-  
+
   #chat-box {
     padding: 12px;
     margin-bottom: 80px;
@@ -237,7 +298,7 @@ input:focus, textarea:focus {
     z-index: 10;
     border-top: 1px solid #232428;
   }
-  
+
   footer .hidden {
     display: none !important;
   }
@@ -278,7 +339,7 @@ input:focus, textarea:focus {
     font-size: 14px;
     line-height: 1.5;
   }
-  
+
   header:not(.md\:hidden) {
     display: none;
   }
@@ -297,7 +358,9 @@ input:focus, textarea:focus {
   }
 
   /* Better touch targets */
-  button, label, input {
+  button,
+  label,
+  input {
     min-height: 44px;
     touch-action: manipulation;
   }
@@ -363,23 +426,6 @@ input:focus, textarea:focus {
   transition: box-shadow 0.15s ease;
 }
 
-/* Emoji picker styling */
-.emoji-picker {
-  background: #36393f;
-  border: 1px solid #40444b;
-  border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-}
-
-.emoji-picker::-webkit-scrollbar {
-  width: 6px;
-}
-
-.emoji-picker::-webkit-scrollbar-thumb {
-  background: #202225;
-  border-radius: 3px;
-}
-
 /* Loading states */
 .loading {
   opacity: 0.6;
@@ -412,7 +458,7 @@ input:focus, textarea:focus {
   .text-gray-400 {
     color: #b9bbbe;
   }
-  
+
   .bg-[#2b2d31] {
     border: 1px solid #40444b;
   }
@@ -420,14 +466,15 @@ input:focus, textarea:focus {
 
 /* Print styles */
 @media print {
-  .fixed, .sticky {
+  .fixed,
+  .sticky {
     position: static !important;
   }
-  
+
   .hidden {
     display: none !important;
   }
-  
+
   #chat-box {
     height: auto !important;
     overflow: visible !important;
