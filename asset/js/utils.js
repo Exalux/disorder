@@ -5,15 +5,15 @@ export function showToast(message) {
   const toast = document.createElement("div");
   toast.innerHTML = message;
   toast.className =
-    "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in";
+    "fixed bottom-20 md:bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in border border-green-400";
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
 
 export function appendSystemMessage(msg) {
   const div = document.createElement("div");
-  div.className = "text-center text-gray-400 text-sm";
-  div.textContent = msg;
+  div.className = "text-center text-gray-400 text-sm my-2 px-4 py-1 bg-[#2b2d31] bg-opacity-50 rounded-full mx-auto max-w-fit";
+  div.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${msg}`;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -23,12 +23,7 @@ copyPeerIdBtn.addEventListener("click", () => {
   navigator.clipboard
     .writeText(peerId)
     .then(() => {
-      const notification = document.createElement("div");
-      notification.className =
-        "fixed bottom-5 right-5 bg-green-500 text-white p-2 rounded";
-      notification.textContent = "Peer ID copied!";
-      document.body.appendChild(notification);
-      setTimeout(() => notification.remove(), 2000);
+      showToast("Peer ID copied! <i class='fas fa-check text-green-400 ml-1'></i>");
     })
     .catch((err) => console.error("Failed to copy: ", err));
 });
