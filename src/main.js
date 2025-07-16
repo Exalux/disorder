@@ -1,4 +1,4 @@
-// Main application entry point
+// Main application entry point with enhanced voice and mobile support
 import { stateManager } from "./core/StateManager.js"
 import { eventBus } from "./core/EventBus.js"
 import { peerManager } from "./core/PeerManager.js"
@@ -14,6 +14,7 @@ class DiscordApp {
     this.messageRenderer = null
     this.currentEmojiPicker = null
     this.currentGifPicker = null
+    this.voiceManager = voiceManager
     this.setupEventListeners()
   }
 
@@ -507,47 +508,48 @@ class DiscordApp {
 
   setupVoiceControls() {
     const joinVoiceBtn = document.getElementById("voice-channel")
+    const mobileVoiceBtn = document.getElementById("mobile-voice-channel")
     const toggleMicBtn = document.getElementById("toggle-mic")
     const toggleCamBtn = document.getElementById("toggle-cam")
     const shareScreenBtn = document.getElementById("share-screen")
     const leaveVoiceBtn = document.getElementById("leave-voice")
-
-    if (joinVoiceBtn) {
-      joinVoiceBtn.addEventListener("click", () => {
-        voiceManager.joinVoiceChannel()
-      })
-    }
+    const leaveVoiceChannelBtn = document.getElementById("leave-voice-channel")
+    ;[joinVoiceBtn, mobileVoiceBtn].forEach((btn) => {
+      if (btn) {
+        btn.addEventListener("click", () => {
+          this.voiceManager.joinVoiceChannel()
+        })
+      }
+    })
 
     if (toggleMicBtn) {
       toggleMicBtn.addEventListener("click", () => {
-        voiceManager.toggleMicrophone()
+        this.voiceManager.toggleMicrophone()
       })
     }
 
     if (toggleCamBtn) {
       toggleCamBtn.addEventListener("click", () => {
-        voiceManager.toggleCamera()
+        this.voiceManager.toggleCamera()
       })
     }
 
     if (shareScreenBtn) {
       shareScreenBtn.addEventListener("click", () => {
-        voiceManager.toggleScreenShare()
+        this.voiceManager.toggleScreenShare()
       })
     }
-
-    if (leaveVoiceBtn) {
-      leaveVoiceBtn.addEventListener("click", () => {
-        voiceManager.leaveVoiceChannel()
-      })
-    }
+    ;[leaveVoiceBtn, leaveVoiceChannelBtn].forEach((btn) => {
+      if (btn) {
+        btn.addEventListener("click", () => {
+          this.voiceManager.leaveVoiceChannel()
+        })
+      }
+    })
   }
 
   setupProfileManagement() {
     const avatarPreview = document.getElementById("avatar-preview")
-    const profilePanel = document.getElementById("profile-panel")
-    const nicknameInput = document.getElementById("nickname-input")
-    const avatarUpload = document.getElementById("avatar-upload")
 
     if (avatarPreview) {
       avatarPreview.addEventListener("click", () => {
@@ -802,46 +804,36 @@ class DiscordApp {
 
   handleVoiceStateUpdate(peerId, state) {
     // Update voice user UI based on state changes
-    const userElement = document.getElementById(`voice-user-${peerId}`)
-    if (!userElement) return
-
-    // Update microphone status
-    const micIcon = userElement.querySelector(".fa-microphone, .fa-microphone-slash")
-    if (micIcon && peerId !== stateManager.getStateValue("user.id")) {
-      micIcon.className = state.micEnabled
-        ? "fas fa-microphone text-xs text-gray-400"
-        : "fas fa-microphone-slash text-xs text-red-400"
+    const user = this.voiceManager.voiceUsers.get(peerId)
+    if (user) {
+      user.micEnabled = state.micEnabled
+      this.voiceManager.voiceUsers.set(peerId, user)
+      this.voiceManager.updateVoiceChannelDisplay()
     }
   }
 
   setupUserControls() {
     // Setup user control buttons in the bottom left
-    const userArea = document.querySelector(".mt-auto.p-3")
-    if (!userArea) return
+    const userMicBtn = document.getElementById("user-mic-btn")
+    const userHeadphonesBtn = document.getElementById("user-headphones-btn")
+    const userSettingsBtn = document.getElementById("user-settings-btn")
 
-    // Mic button
-    const micBtn = userArea.querySelector('[title="Mute"]')
-    if (micBtn) {
-      micBtn.addEventListener("click", (e) => {
+    if (userMicBtn) {
+      userMicBtn.addEventListener("click", (e) => {
         e.stopPropagation()
-        voiceManager.toggleMicrophone()
+        this.voiceManager.toggleMicrophone()
       })
     }
 
-    // Headphones button
-    const headphonesBtn = userArea.querySelector('[title="Deafen"]')
-    if (headphonesBtn) {
-      headphonesBtn.addEventListener("click", (e) => {
+    if (userHeadphonesBtn) {
+      userHeadphonesBtn.addEventListener("click", (e) => {
         e.stopPropagation()
-        // Toggle deafen functionality
         this.toggleDeafen()
       })
     }
 
-    // Settings button
-    const settingsBtn = userArea.querySelector('[title="Settings"]')
-    if (settingsBtn) {
-      settingsBtn.addEventListener("click", (e) => {
+    if (userSettingsBtn) {
+      userSettingsBtn.addEventListener("click", (e) => {
         e.stopPropagation()
         this.openSettings()
       })
@@ -860,13 +852,15 @@ class DiscordApp {
     })
 
     // Update button appearance
-    const headphonesBtn = document.querySelector('[title="Deafen"]')
+    const headphonesBtn = document.getElementById("user-headphones-btn")
     if (headphonesBtn) {
       const icon = headphonesBtn.querySelector("i")
       if (!isDeafened) {
-        icon.className = "fas fa-volume-mute text-xs text-gray-400"
+        icon.className = "fas fa-volume-mute text-xs"
+        headphonesBtn.classList.add("bg-red-600", "bg-opacity-20", "text-red-400")
       } else {
-        icon.className = "fas fa-volume-up text-xs text-gray-400"
+        icon.className = "fas fa-headphones text-xs"
+        headphonesBtn.className = headphonesBtn.className.replace(/bg-red-\d+/, "").replace(/text-red-\d+/, "")
       }
     }
   }
@@ -874,6 +868,7 @@ class DiscordApp {
   openSettings() {
     // Open settings modal or panel
     console.log("Settings opened")
+    NotificationManager.showInfo("Settings panel coming soon!")
   }
 }
 
@@ -946,31 +941,45 @@ additionalStyles.textContent = `
   40% { transform: scale(1); }
 }
 
-.sidebar-open {
-  animation: slideInLeft 0.2s ease-out;
+/* Mobile sidebar improvements */
+#mobile-sidebar-overlay {
+  backdrop-filter: blur(2px);
 }
 
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+#mobile-sidebar {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.gif-picker {
-  animation: fadeInUp 0.2s ease-out;
+/* Voice channel enhancements */
+.voice-user-item:hover,
+.voice-user-mobile:hover,
+.voice-user-panel:hover {
+  transform: translateY(-1px);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+.voice-user-item img,
+.voice-user-mobile img,
+.voice-user-panel img {
+  transition: all 0.2s ease;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  #chat-box {
+    padding-bottom: 80px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .keyboard-open #chat-box {
+    padding-bottom: 200px;
+  }
+  
+  #voice-channel-panel {
+    padding: 12px;
+  }
+  
+  #voice-channel-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 }
 `

@@ -108,8 +108,11 @@
       <span>General</span>
     </div>
 
-    <!-- Connected Users in Voice -->
-    <div id="voice-users" class="px-4 space-y-1 mt-2 text-sm text-gray-300"></div>
+    <!-- Voice Channel Users Grid -->
+    <div id="voice-users-container" class="hidden px-2 py-2 mx-2 bg-[#232428] rounded-lg mt-2">
+      <div class="text-xs text-gray-400 mb-2 px-2">Voice Channel</div>
+      <div id="voice-users-grid" class="grid grid-cols-4 gap-2"></div>
+    </div>
 
     <!-- User info -->
     <div class="mt-auto p-3 flex items-center gap-2 border-t border-[#232428] cursor-pointer hover:bg-[#3c3f45] rounded transition-colors">
@@ -122,13 +125,13 @@
         </div>
       </div>
       <div class="flex items-center gap-1">
-        <button class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Mute">
+        <button id="user-mic-btn" class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Mute">
           <i class="fas fa-microphone text-xs"></i>
         </button>
-        <button class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Deafen">
+        <button id="user-headphones-btn" class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Deafen">
           <i class="fas fa-headphones text-xs"></i>
         </button>
-        <button class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Settings">
+        <button id="user-settings-btn" class="p-1 hover:bg-[#40444b] rounded text-gray-400 hover:text-white transition-colors" title="Settings">
           <i class="fas fa-cog text-xs"></i>
         </button>
       </div>
@@ -164,73 +167,83 @@
     </div>
   </aside>
 
+  <!-- Mobile Sidebar Overlay -->
+  <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden">
+    <div id="mobile-sidebar" class="w-80 h-full bg-[#2b2d31] transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+      <div class="p-4">
+        <!-- Mobile Sidebar Header -->
+        <div class="flex justify-between items-center mb-6 text-white">
+          <span class="font-semibold text-lg">Disorder</span>
+          <button id="mobile-sidebar-close" class="text-white text-2xl hover:text-gray-300 transition-colors p-1">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <!-- Connection Section -->
+        <div class="mb-6">
+          <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-3">Connection</h3>
+          <div class="space-y-2">
+            <button id="mobile-qr-btn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded flex items-center gap-2 transition-colors">
+              <i class="fas fa-qrcode"></i> Share QR Code
+            </button>
+            <button id="mobile-scan-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-3 rounded flex items-center gap-2 transition-colors">
+              <i class="fas fa-camera"></i> Scan QR Code
+            </button>
+            <div class="flex gap-2">
+              <input id="mobile-peer-input" class="flex-1 bg-[#1e1f22] p-2 rounded text-white text-sm placeholder:text-gray-400 border border-[#40444b] focus:border-[#5865f2] focus:outline-none" placeholder="Enter Peer ID"/>
+              <button id="mobile-connect-btn" class="bg-[#5865f2] hover:bg-[#4752c4] text-white px-3 py-2 rounded text-sm font-medium transition-colors">Connect</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Channels Section -->
+        <div class="mb-6">
+          <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-3">Text Channels</h3>
+          <div class="space-y-1">
+            <div class="px-3 py-2 bg-[#404249] text-white rounded text-sm flex items-center">
+              <i class="fas fa-hashtag text-gray-400 mr-2 text-xs"></i>
+              general
+            </div>
+            <div class="px-3 py-2 text-gray-400 cursor-not-allowed text-sm flex items-center">
+              <i class="fas fa-hashtag text-gray-500 mr-2 text-xs"></i>
+              random
+            </div>
+            <div class="px-3 py-2 text-gray-400 cursor-not-allowed text-sm flex items-center">
+              <i class="fas fa-hashtag text-gray-500 mr-2 text-xs"></i>
+              memes
+            </div>
+          </div>
+        </div>
+        
+        <!-- Voice Channels -->
+        <div class="mb-6">
+          <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-3">Voice Channels</h3>
+          <div id="mobile-voice-channel" class="flex items-center gap-2 px-3 py-2 hover:bg-[#3c3f45] hover:text-white rounded cursor-pointer text-sm transition-colors">
+            <i class="fas fa-volume-up text-gray-400"></i>
+            <span>General</span>
+          </div>
+          
+          <!-- Mobile Voice Users Grid -->
+          <div id="mobile-voice-users-container" class="hidden mt-3 p-3 bg-[#232428] rounded-lg">
+            <div class="text-xs text-gray-400 mb-2">Voice Channel</div>
+            <div id="mobile-voice-users-grid" class="grid grid-cols-3 gap-2"></div>
+          </div>
+        </div>
+        
+        <!-- Online Users -->
+        <div>
+          <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-3">Online Users</h3>
+          <div id="mobile-peer-list" class="space-y-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Chat Section -->
   <div class="flex flex-col flex-1 bg-[#313338]">
     <!-- Mobile Header -->
-    <header class="flex md:hidden items-center justify-between h-12 px-4 bg-[#313338] border-b border-[#232428]">
-      <!-- Mobile Sidebar -->
-      <div id="mobile-sidebar" class="fixed inset-0 bg-black bg-opacity-75 z-40 hidden">
-        <div class="w-80 h-full bg-[#2b2d31] p-4 overflow-y-auto">
-          <div class="flex justify-between items-center mb-4 text-white">
-            <span class="font-semibold text-lg">Disorder</span>
-            <button id="close-sidebar" class="text-white text-2xl hover:text-gray-300 transition-colors">&times;</button>
-          </div>
-          
-          <!-- Connection Section -->
-          <div class="mb-6">
-            <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-2">Connection</h3>
-            <div class="space-y-2">
-              <button id="mobile-qr-btn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded flex items-center gap-2 transition-colors">
-                <i class="fas fa-qrcode"></i> Share QR Code
-              </button>
-              <button id="mobile-scan-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-3 rounded flex items-center gap-2 transition-colors">
-                <i class="fas fa-camera"></i> Scan QR Code
-              </button>
-              <div class="flex gap-2">
-                <input id="mobile-peer-input" class="flex-1 bg-[#1e1f22] p-2 rounded text-white text-sm placeholder:text-gray-400 border border-[#40444b] focus:border-[#5865f2] focus:outline-none" placeholder="Enter Peer ID"/>
-                <button id="mobile-connect-btn" class="bg-[#5865f2] hover:bg-[#4752c4] text-white px-3 py-2 rounded text-sm font-medium transition-colors">Connect</button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Channels Section -->
-          <div class="mb-6">
-            <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-2">Text Channels</h3>
-            <div class="space-y-1">
-              <div class="px-3 py-2 bg-[#404249] text-white rounded text-sm flex items-center">
-                <i class="fas fa-hashtag text-gray-400 mr-2 text-xs"></i>
-                general
-              </div>
-              <div class="px-3 py-2 text-gray-400 cursor-not-allowed text-sm flex items-center">
-                <i class="fas fa-hashtag text-gray-500 mr-2 text-xs"></i>
-                random
-              </div>
-              <div class="px-3 py-2 text-gray-400 cursor-not-allowed text-sm flex items-center">
-                <i class="fas fa-hashtag text-gray-500 mr-2 text-xs"></i>
-                memes
-              </div>
-            </div>
-          </div>
-          
-          <!-- Voice Channels -->
-          <div class="mb-6">
-            <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-2">Voice Channels</h3>
-            <div class="flex items-center gap-2 px-3 py-2 hover:bg-[#3c3f45] hover:text-white rounded cursor-pointer text-sm transition-colors">
-              <i class="fas fa-volume-up text-gray-400"></i>
-              <span>General</span>
-            </div>
-            <div id="mobile-voice-users" class="ml-4 mt-2 space-y-1"></div>
-          </div>
-          
-          <!-- Online Users -->
-          <div>
-            <h3 class="text-xs uppercase text-gray-400 tracking-widest mb-2">Online Users</h3>
-            <div id="mobile-peer-list" class="space-y-1"></div>
-          </div>
-        </div>
-      </div>
-
-      <button id="mobile-menu-btn" class="text-white text-xl hover:text-gray-300 transition-colors">
+    <header class="flex md:hidden items-center justify-between h-12 px-4 bg-[#313338] border-b border-[#232428] fixed top-0 left-0 right-0 z-30">
+      <button id="mobile-menu-btn" class="text-white text-xl hover:text-gray-300 transition-colors p-2">
         <i class="fas fa-bars"></i>
       </button>
       
@@ -240,10 +253,10 @@
       </div>
       
       <div class="flex items-center gap-2">
-        <button onclick="showQRCode()" class="text-white text-lg hover:text-gray-300 transition-colors">
+        <button onclick="showQRCode()" class="text-white text-lg hover:text-gray-300 transition-colors p-1">
           <i class="fas fa-qrcode"></i>
         </button>
-        <button onclick="showQRScanner()" class="text-white text-lg hover:text-gray-300 transition-colors">
+        <button onclick="showQRScanner()" class="text-white text-lg hover:text-gray-300 transition-colors p-1">
           <i class="fas fa-camera"></i>
         </button>
       </div>
@@ -272,16 +285,23 @@
     </header>
 
     <!-- Chat Window with Sidebar -->
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden pt-12 md:pt-0">
       <main class="flex-1 flex flex-col overflow-hidden">
-        <!-- Voice Top Panel -->
-        <div id="voice-top-panel" class="hidden px-4 py-2 bg-[#2b2d31] border-b border-[#232428] flex items-center gap-4 z-30">
-          <i class="fas fa-volume-up text-green-400"></i>
-          <span class="text-white font-semibold">Voice Channel Active</span>
-          <div class="ml-auto flex items-center gap-2">
-            <span class="text-xs text-gray-400">Connected</span>
-            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+        <!-- Voice Channel Panel -->
+        <div id="voice-channel-panel" class="hidden bg-[#2b2d31] border-b border-[#232428] p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-volume-up text-green-400"></i>
+              <span class="text-white font-semibold">Voice Channel - General</span>
+              <span id="voice-user-count" class="text-xs text-gray-400">(0)</span>
+            </div>
+            <button id="leave-voice-channel" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+              <i class="fas fa-phone-slash mr-1"></i> Leave
+            </button>
           </div>
+          
+          <!-- Voice Users Grid -->
+          <div id="voice-channel-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
         </div>
 
         <!-- Chat Messages -->
@@ -321,7 +341,7 @@
     <div id="reply-preview" class="hidden bg-[#2b2d31] text-white text-sm px-4 py-2 border-l-4 border-[#5865f2] mx-4 mt-2 rounded-r"></div>
 
     <!-- Input Area -->
-    <footer class="h-16 px-4 flex items-center bg-[#383a40] border-t border-[#232428] gap-3 relative">
+    <footer class="h-16 px-4 flex items-center bg-[#383a40] border-t border-[#232428] gap-3 relative fixed md:relative bottom-0 left-0 right-0 z-20">
       <label for="plus-file-input" class="text-gray-400 hover:text-white text-xl cursor-pointer p-2 rounded hover:bg-[#4a4d55] transition-colors" title="Upload File">
         <i class="fas fa-plus-circle"></i>
       </label>
@@ -350,8 +370,8 @@
     </footer>
   </div>
 
-  <!-- Media Control Dock -->
-  <div id="media-control-dock" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 bg-[#2b2d31] px-6 py-3 rounded-xl shadow-lg flex gap-4 items-center text-white hidden border border-[#404249]">
+  <!-- Voice Control Dock -->
+  <div id="voice-control-dock" class="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 z-50 bg-[#2b2d31] px-6 py-3 rounded-xl shadow-lg flex gap-4 items-center text-white hidden border border-[#404249]">
     <button id="toggle-mic" class="hover:text-red-500 p-2 rounded transition-colors" title="Toggle Microphone">
       <i class="fas fa-microphone"></i>
     </button>
