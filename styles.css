@@ -1,0 +1,482 @@
+/* Enhanced Discord-like styles */
+:root {
+  --vh: 1vh;
+}
+
+/* Scrollbar styling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbar for desktop */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2b2d31;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1f22;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #40444b;
+}
+
+/* Message styling */
+.message-container {
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+
+.message-container:hover {
+  background-color: #32353b !important;
+}
+
+.message-container:hover .message-actions {
+  opacity: 1;
+}
+
+.message-actions {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  position: absolute;
+  top: -8px;
+  right: 16px;
+  background: #36393f;
+  border: 1px solid #40444b;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  z-index: 10;
+}
+
+.message-actions button {
+  padding: 4px 6px;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+}
+
+.message-actions button:hover {
+  background-color: #40444b;
+}
+
+/* Grouped messages */
+.grouped-message {
+  margin-top: 0.125rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
+/* Mention styling */
+.mentioned-message {
+  background-color: rgba(250, 166, 26, 0.05) !important;
+  border-left: 3px solid #faa61a;
+  padding-left: 8px;
+  margin-left: -8px;
+}
+
+/* Voice activity */
+.speaking img {
+  animation: speakingPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes speakingPulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+/* Typing indicator */
+.typing-dots div {
+  animation: typingBounce 1.4s ease-in-out infinite both;
+}
+
+.typing-dots div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typing-dots div:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typingBounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes highlightFlash {
+  0% {
+    background-color: rgba(88, 101, 242, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight-flash {
+  animation: highlightFlash 2s ease-out;
+}
+
+/* Drag and drop */
+.drag-over {
+  background-color: rgba(88, 101, 242, 0.1) !important;
+  border: 2px dashed #5865f2;
+}
+
+/* User profile modal */
+.user-profile-card {
+  animation: slideIn 0.2s ease-out;
+  max-width: 300px;
+  backdrop-filter: blur(5px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid #5865f2;
+  outline-offset: 2px;
+}
+
+/* Button hover effects */
+button {
+  transition: all 0.15s ease;
+}
+
+/* Input focus effects */
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 1px #5865f2;
+}
+
+/* Mobile sidebar animations */
+.sidebar-open {
+  animation: slideInLeft 0.2s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* GIF picker animations */
+.gif-picker {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Emoji picker styling */
+.emoji-picker {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+.emoji-picker::-webkit-scrollbar {
+  width: 6px;
+}
+
+.emoji-picker::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 3px;
+}
+
+/* GIF image styling */
+.gif-image {
+  max-height: 300px;
+  object-fit: contain;
+}
+
+/* Mobile specific styles */
+@media (max-width: 767px) {
+  .h-screen {
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  aside:not(#mobile-sidebar aside) {
+    display: none !important;
+  }
+
+  #mobile-sidebar {
+    display: block;
+  }
+
+  .flex-1 {
+    width: 100%;
+  }
+
+  #chat-box {
+    padding: 12px;
+    margin-bottom: 80px;
+    height: calc(100vh - 112px);
+    padding-top: 60px;
+  }
+
+  header.md\:hidden {
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    height: 48px;
+    padding: 0 16px;
+    background: #313338;
+  }
+
+  #voice-top-panel {
+    top: 48px !important;
+    left: 0 !important;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 64px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #383a40;
+    z-index: 10;
+    border-top: 1px solid #232428;
+  }
+
+  footer .hidden {
+    display: none !important;
+  }
+
+  #message-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 10px;
+    border-radius: 8px;
+    background: #1e1f22;
+    color: #ffffff;
+    border: 1px solid #40444b;
+    flex: 1;
+    height: 40px;
+    touch-action: manipulation;
+  }
+
+  #media-control-dock {
+    bottom: 80px !important;
+    left: 50% !important;
+  }
+
+  #profile-panel {
+    position: fixed;
+    bottom: 64px;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    background: #1e1f22;
+    padding: 16px;
+    border-radius: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+  }
+
+  .message-container {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  header:not(.md\:hidden) {
+    display: none;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+
+  /* Keyboard adjustments */
+  .keyboard-open #chat-box {
+    height: calc(100vh - 200px);
+  }
+
+  /* Better touch targets */
+  button,
+  label,
+  input {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  .voice-user {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+
+  /* Landscape mobile adjustments */
+  @media (orientation: landscape) {
+    #chat-box {
+      height: calc(100vh - 100px);
+      padding-top: 50px;
+    }
+
+    header.md\:hidden {
+      height: 40px;
+    }
+
+    footer {
+      height: 50px;
+      padding: 4px 12px;
+    }
+
+    #media-control-dock {
+      bottom: 60px !important;
+      padding: 8px 16px;
+    }
+  }
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Enhanced message hover effects */
+.message-hover {
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Voice user styling */
+.voice-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.voice-user:hover {
+  background-color: #3c3f45;
+}
+
+.voice-user img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: box-shadow 0.15s ease;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error states */
+.error {
+  color: #f04747;
+  border-color: #f04747;
+}
+
+/* Success states */
+.success {
+  color: #43b581;
+  border-color: #43b581;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-gray-400 {
+    color: #b9bbbe;
+  }
+
+  .bg-[#2b2d31] {
+    border: 1px solid #40444b;
+  }
+}
+
+/* Print styles */
+@media print {
+  .fixed,
+  .sticky {
+    position: static !important;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  #chat-box {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
